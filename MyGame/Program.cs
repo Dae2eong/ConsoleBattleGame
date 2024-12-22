@@ -6,14 +6,15 @@ namespace MyGame
 {
     internal class Program
     {
-        static string playerName = "대성대성";
+        static string playerName;
         static string selectSkill;
         static bool cancelSkill = false;
 
         static void Main(string[] args)
         {
-            //Start();
-            //Create();
+            Start();
+            Create();
+
             Player player = new Player(playerName, 100, 50, 20, 10, 0, false, 0, 0);
 
             List<Character> monsterList = new List<Character>();
@@ -35,9 +36,9 @@ namespace MyGame
             List<Weapon> weapons = new List<Weapon>();
 
             List<Weapon> inven = new List<Weapon>();
-            inven.Add(new Weapon(weaponList[0].Code, weaponList[0].WpName, weaponList[0].WpStr, weaponList[0].WpDef,
-                    weaponList[0].WpMaxDur, weaponList[0].WpMinDur, weaponList[0].WpLevel, weaponList[0].WpGold,
-                    weaponList[0].WpType, weaponList[0].WpEnhanceCheck, weaponList[0].WpEnhanceLevel, weaponList[0].WpEquip));
+            //inven.Add(new Weapon(weaponList[0].Code, weaponList[0].WpName, weaponList[0].WpStr, weaponList[0].WpDef,
+            //        weaponList[0].WpMaxDur, weaponList[0].WpMinDur, weaponList[0].WpLevel, weaponList[0].WpGold,
+            //        weaponList[0].WpType, weaponList[0].WpEnhanceCheck, weaponList[0].WpEnhanceLevel, weaponList[0].WpEquip));
 
             for (int i = 0; i < skillList.Count; i++)
             {
@@ -316,7 +317,7 @@ namespace MyGame
                     if (monsters[0].IsStun == true)
                     {
                         Console.WriteLine($"{monsters[0].Name}이(가) 기절이므로 공격할 수 없습니다.");
-                        Thread.Sleep(1000);
+                        Thread.Sleep(2000);
                         monsters[0].IsStun = false;
                         Console.Clear();
                         continue;
@@ -324,8 +325,7 @@ namespace MyGame
                     else
                     {
                         Console.WriteLine($"▶{monsters[0].Name}이(가) 공격 할 차례입니다◀");
-
-                        Thread.Sleep(1000);
+                        Thread.Sleep(2000);
                         Console.Clear();
 
                         player.ShowInfo();
@@ -609,7 +609,9 @@ namespace MyGame
                             if (player.gold >= selectedWeapon.WpGold)
                             {
                                 Console.WriteLine($"{selectedWeapon.WpName}을(를) 구매했습니다.");
+                                Thread.Sleep(1000);
                                 Console.WriteLine($"{selectedWeapon.WpGold}골드를 지불, 남은골드: {player.gold - selectedWeapon.WpGold}골드");
+                                Thread.Sleep(1000);
                                 player.gold -= selectedWeapon.WpGold;
                                 inven.Add(selectedWeapon);
                                 Console.Clear();

@@ -2,13 +2,13 @@
 
 public class Player : Character
 {
-    public int level = 100;
+    public int level = 5;
     public int curExp;
     public int maxExp = 2;
     public int damage;
     public float maxDamage;
     public float minDamage;
-    public int gold = 100000;
+    public int gold = 1000;
 
     private bool rightHand = false;
     private bool leftHand = false;
@@ -112,6 +112,11 @@ public class Player : Character
             maxExp += 10;
         }
 
+        Hp += 10;
+        Mp += 5;
+        Str += 3;
+        Def += 2;
+
         Console.WriteLine("■■■■■■■■■■■■■■■■■■■■");
         Thread.Sleep(200);
         Console.WriteLine("{0, -19}■", "■");
@@ -121,6 +126,12 @@ public class Player : Character
         Console.WriteLine("{0, -19}■", "■");
         Thread.Sleep(200);
         Console.WriteLine("■■■■■■■■■■■■■■■■■■■■");
+        Thread.Sleep(2000);
+
+        Console.WriteLine($"HP {Hp}으로 증가");
+        Console.WriteLine($"MP {Mp}으로 증가");
+        Console.WriteLine($"STR {Str}으로 증가");
+        Console.WriteLine($"DEF {Def}으로 증가");
         Thread.Sleep(2000);
     }
 
