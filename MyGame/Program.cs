@@ -52,6 +52,12 @@ namespace MyGame
                     weaponList[i].WpType, weaponList[i].WpEnhanceCheck, weaponList[i].WpEnhanceLevel, weaponList[i].WpEquip));
             }
 
+            Dictionary<int, Weapon> weaponDictionary = new Dictionary<int, Weapon>();
+            foreach (var weapon in weapons)
+            {
+                weaponDictionary[weapon.Code] = weapon;
+            }
+
             while (true)
             {
                 UpdateSkillState(player, skills);
@@ -109,7 +115,7 @@ namespace MyGame
                             continue;
                         case 5:
                             Console.Clear();
-                            Store(player, weapons, inven);
+                            Store(player, weaponDictionary, inven);
                             break;
                         default:
                             Console.Clear();
@@ -560,26 +566,26 @@ namespace MyGame
         }
 
         #region 상점
-        static void Store(Player player, List<Weapon> weapons, List<Weapon> inven)
+        static void Store(Player player, Dictionary<int, Weapon> weaponDictionary, List<Weapon> inven)
         {
             while (true)
             {
                 Console.WriteLine("===============================상점===============================");
-                for (int i = 0; i < weapons.Count; i++)
+                foreach (var weapon in weaponDictionary.Values)
                 {
-                    if (weapons[i].Code <= 10)
+                    if (weapon.Code <= 10)
                     {
-                        Console.WriteLine($"{weapons[i].Code, -1} {weapons[i].WpName, -10}Str: {weapons[i].WpStr, -5}Lv: {weapons[i].WpLevel, -5}" +
-                            $"Gold: {weapons[i].WpGold, -8}Type: {weapons[i].WpType}");
+                        Console.WriteLine($"{weapon.Code,-2} {weapon.WpName,-10}Str: {weapon.WpStr,-5}Lv: {weapon.WpLevel,-5}" +
+                            $"Gold: {weapon.WpGold,-8}Type: {weapon.WpType}");
                     }
                 }
                 Console.WriteLine();
-                for (int i = 0; i < weapons.Count; i++)
+                foreach (var weapon in weaponDictionary.Values)
                 {
-                    if (weapons[i].Code >= 10)
+                    if (weapon.Code > 10)
                     {
-                        Console.WriteLine($"{weapons[i].Code,-2} {weapons[i].WpName, -10}Def: {weapons[i].WpDef, -5}Lv: {weapons[i].WpLevel, -5}" +
-                            $"Gold: {weapons[i].WpGold, -8}Type: {weapons[i].WpType}");
+                        Console.WriteLine($"{weapon.Code,-2} {weapon.WpName,-10}Def: {weapon.WpDef,-5}Lv: {weapon.WpLevel,-5}" +
+                            $"Gold: {weapon.WpGold,-8}Type: {weapon.WpType}");
                     }
                 }
                 Console.WriteLine("==================================================================");
@@ -596,46 +602,37 @@ namespace MyGame
                         break;
                     }
 
-                    bool found = false;
-                    for (int i = 0; i < weapons.Count; i++)
+                    if (weaponDictionary.TryGetValue(result, out Weapon selectedWeapon))
                     {
-                        if (result == weapons[i].Code)
+                        if (player.level >= selectedWeapon.WpLevel)
                         {
-                            if (player.level >= weapons[i].WpLevel)
+                            if (player.gold >= selectedWeapon.WpGold)
                             {
-                                if (player.gold >= weapons[i].WpGold)
-                                {
-                                    found = true;
-                                    Console.WriteLine($"{weapons[i].WpName}을(를) 구매했습니다.");
-                                    //Thread.Sleep(2000);
-                                    Console.WriteLine($"{weapons[i].WpGold}골드를 지불, 남은골드: {player.gold - weapons[i].WpGold}골드");
-                                    player.gold -= weapons[i].WpGold;
-                                    inven.Add(weapons[i]);
-                                    //Thread.Sleep(2000);
-                                    Console.Clear();
-                                    break;
-                                }
-                                else
-                                {
-                                    Console.WriteLine("골드가 부족합니다.");
-                                    Thread.Sleep(1000);
-                                    Console.Clear();
-                                    break;
-                                }
+                                Console.WriteLine($"{selectedWeapon.WpName}을(를) 구매했습니다.");
+                                Console.WriteLine($"{selectedWeapon.WpGold}골드를 지불, 남은골드: {player.gold - selectedWeapon.WpGold}골드");
+                                player.gold -= selectedWeapon.WpGold;
+                                inven.Add(selectedWeapon);
+                                Console.Clear();
                             }
                             else
                             {
-                                Console.WriteLine("레벨이 낮아 구매할 수 없습니다.");
+                                Console.WriteLine("골드가 부족합니다.");
                                 Thread.Sleep(1000);
                                 Console.Clear();
-                                break;
                             }
                         }
+                        else
+                        {
+                            Console.WriteLine("레벨이 낮아 구매할 수 없습니다.");
+                            Thread.Sleep(1000);
+                            Console.Clear();
+                        }
                     }
-                    if (!found)
+                    else
                     {
+                        Console.WriteLine("아이템을 찾을 수 없습니다.");
+                        Thread.Sleep(1000);
                         Console.Clear();
-                        continue;
                     }
                 }
             }
